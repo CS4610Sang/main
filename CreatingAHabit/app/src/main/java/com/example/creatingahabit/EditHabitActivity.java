@@ -24,7 +24,8 @@ public class EditHabitActivity extends AppCompatActivity implements AdapterView.
     MenuItem createHabit;
     Spinner frequencySpinner;
     String spinnerSelected;
-    String formerHabitName;
+//    String formerHabitName;
+    private int habitID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,7 @@ public class EditHabitActivity extends AppCompatActivity implements AdapterView.
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
+
         habitName = (EditText) findViewById(R.id.habitName);
         habitDescription = (EditText) findViewById(R.id.description);
         habitFrequency = (EditText) findViewById(R.id.frequency);
@@ -50,7 +52,9 @@ public class EditHabitActivity extends AppCompatActivity implements AdapterView.
         Bundle extras = intent.getExtras();
         //Habit name is passed through the Intent
         String message = extras.getString("habit_name");
-        formerHabitName = habitName.getText().toString();
+        setTitle(message);
+//        formerHabitName = habitName.getText().toString();
+        habitID = myDB.returnID(message);
         populateEditText(message);
 
 
@@ -67,7 +71,7 @@ public class EditHabitActivity extends AppCompatActivity implements AdapterView.
     public void populateEditText(String name){
         Cursor cursor = null;
         try{
-            cursor = myDB.getItem(name);
+            cursor = myDB.getItem(String.valueOf(habitID));
             if(cursor.getCount() == 0) {
                 Toast.makeText(this, "No data to show", Toast.LENGTH_SHORT).show();
                 return;
@@ -100,7 +104,7 @@ public class EditHabitActivity extends AppCompatActivity implements AdapterView.
     }
 
     public void clickSave(View view){
-        myDB.updateData(habitName.getText().toString(),
+        myDB.updateData(habitID, habitName.getText().toString(),
                 habitDescription.getText().toString(),
                 habitFrequency.getText().toString(), spinnerSelected);
         Intent create = new Intent(this, MainActivity.class);

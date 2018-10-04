@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -58,14 +59,16 @@ public class DescriptionActivity extends AppCompatActivity {
     }
 
     public void showInfo(String name) {
-        Cursor cursor = myDB.getItem(name);
+        int ID = myDB.returnID(name);
+        Log.d("E", "ID is:" + ID);
+        Cursor cursor = myDB.getItem(String.valueOf(ID));
         if(cursor.getCount() == 0) {
             Toast.makeText(this, "No data to show", Toast.LENGTH_SHORT).show();
         }
         else {
             cursor.moveToNext();
-            freq.setText(cursor.getString(2) + getString(R.string.divide) + cursor.getString(3));
-            desc.setText(cursor.getString(1));
+            freq.setText(cursor.getString(3) + getString(R.string.divide) + cursor.getString(4));
+            desc.setText(cursor.getString(2));
         }
     }
 
